@@ -57,7 +57,8 @@ class _ChooseLayoutState extends State<ChooseLayout> {
                     children: [
                       Text(
                         'Choose Layout',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        style:
+                            TextStyle(color: Color(0xff292929), fontSize: 20),
                       )
                     ],
                   ),
@@ -73,14 +74,15 @@ class _ChooseLayoutState extends State<ChooseLayout> {
                           onTap: () => _onCardTap(index),
                           child: Card(
                             color: _selectedCardIndex == index
-                                ? Colors.blue
+                                ? Color(0xff292929)
                                 : Colors.white,
                             child: Container(
-                              height: 200, // Set height of the card
-                              child: Center(
-                                child: Image.asset(_setImage(index)),
-                              ),
-                            ),
+                                height: 200, // Set height of the card
+                                child: Image.asset(_setImage(index))
+                                // Center(
+                                //   child: Image.asset(_setImage(index)),
+                                // ),
+                                ),
                           ),
                         ),
                       );
@@ -98,12 +100,12 @@ class _ChooseLayoutState extends State<ChooseLayout> {
                           children: [
                             Text(
                               'Next',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                              style: TextStyle(
+                                  color: Color(0xff292929), fontSize: 15),
                             ),
                             Icon(
                               Icons.arrow_right,
-                              color: Colors.white,
+                              color: Color(0xff292929),
                             )
                           ],
                         ),

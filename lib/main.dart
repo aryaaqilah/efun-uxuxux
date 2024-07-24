@@ -16,11 +16,8 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => AppImageProvider())
-    ],
-    child: const MyApp())
-  );
+      providers: [ChangeNotifierProvider(create: (_) => AppImageProvider())],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,17 +30,12 @@ class MyApp extends StatelessWidget {
       title: 'Photo Editor',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xff111111),
-        primarySwatch: Colors.blue,
-        appBarTheme: const AppBarTheme(
-          color: Colors.black,
-          centerTitle: true,
-          elevation: 0
-        ),
-        sliderTheme: const SliderThemeData(
-          showValueIndicator: ShowValueIndicator.always
-        )
-      ),
+          scaffoldBackgroundColor: Color(0xffF4F4F4),
+          primarySwatch: Colors.blueGrey,
+          appBarTheme: const AppBarTheme(
+              color: Colors.black, centerTitle: true, elevation: 0),
+          sliderTheme: const SliderThemeData(
+              showValueIndicator: ShowValueIndicator.always)),
       routes: <String, WidgetBuilder>{
         '/': (_) => const StartScreen(),
         '/home': (_) => const HomeScreen(),
