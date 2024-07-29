@@ -1,3 +1,4 @@
+// main.dart
 import 'package:flutter/material.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:photo_editor/screens/adjust_screen.dart';
@@ -12,6 +13,7 @@ import 'package:photo_editor/screens/start_screen.dart';
 import 'package:photo_editor/screens/sticker_screen.dart';
 import 'package:photo_editor/screens/text_screen.dart';
 import 'package:photo_editor/screens/tint_screen.dart';
+import 'package:photo_editor/screens/splash_screen.dart'; // Import the SplashScreen
 import 'package:provider/provider.dart';
 
 void main() {
@@ -23,7 +25,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
           sliderTheme: const SliderThemeData(
               showValueIndicator: ShowValueIndicator.always)),
       routes: <String, WidgetBuilder>{
-        '/': (_) => const StartScreen(),
+        '/': (_) => SplashScreen(), // Set SplashScreen as the initial route
+        '/start': (_) => const StartScreen(),
         '/home': (_) => const HomeScreen(),
         '/crop': (_) => const CropScreen(),
         '/filter': (_) => const FilterScreen(),
@@ -50,7 +52,7 @@ class MyApp extends StatelessWidget {
         '/draw': (_) => const DrawScreen(),
         '/mask': (_) => const MaskScreen()
       },
-      initialRoute: '/',
+      initialRoute: '/', // This ensures SplashScreen is the first screen
     );
   }
 }
