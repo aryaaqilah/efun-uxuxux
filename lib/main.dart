@@ -14,6 +14,7 @@ import 'package:photo_editor/screens/sticker_screen.dart';
 import 'package:photo_editor/screens/text_screen.dart';
 import 'package:photo_editor/screens/tint_screen.dart';
 import 'package:photo_editor/screens/splash_screen.dart'; // Import the SplashScreen
+import 'package:photo_editor/screens/history_screen.dart'; // Import the SplashScreen
 import 'package:provider/provider.dart';
 
 void main() {
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/': (_) => SplashScreen(), // Set SplashScreen as the initial route
         '/start': (_) => const StartScreen(),
+        '/history': (_) => const HistoryScreen(),
         '/home': (_) => const HomeScreen(),
         '/crop': (_) => const CropScreen(),
         '/filter': (_) => const FilterScreen(),
