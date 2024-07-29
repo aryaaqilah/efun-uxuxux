@@ -67,7 +67,7 @@ class _StartScreenState extends State<StartScreen> {
                         Navigator.of(context).pushReplacementNamed('/home');
                       });
                     },
-                    child: const Text("Gallery"),
+                    child: const Text("History"),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -86,7 +86,7 @@ class _StartScreenState extends State<StartScreen> {
                               // title: 'Suara Puan',
                               )));
                     },
-                    child: const Text("Test"),
+                    child: const Text("Edit"),
                   )
                 ],
               )),
