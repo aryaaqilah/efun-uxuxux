@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:photo_editor/screens/adjust_screen.dart';
@@ -39,7 +38,8 @@ class MyApp extends StatelessWidget {
           sliderTheme: const SliderThemeData(
               showValueIndicator: ShowValueIndicator.always)),
       routes: <String, WidgetBuilder>{
-        '/': (_) => SplashScreen(), // Set SplashScreen as the initial route
+        '/': (_) =>
+            const SplashScreen(), // Set SplashScreen as the initial route
         '/start': (_) => const StartScreen(),
         '/history': (_) => const HistoryScreen(),
         '/home': (_) => const HomeScreen(),
