@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       title: 'Photo Editor',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          scaffoldBackgroundColor: Color.fromARGB(255, 212, 236, 78),
+          scaffoldBackgroundColor: Color.fromARGB(244, 244, 244, 244),
           primarySwatch: Colors.blueGrey,
           appBarTheme: const AppBarTheme(
               color: Colors.black, centerTitle: true, elevation: 0),

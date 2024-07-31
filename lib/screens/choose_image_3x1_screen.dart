@@ -82,65 +82,75 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
           children: [
             Screenshot(
               controller: screenshotController,
-              child: Stack(
-                children: [
-                  Container(
-                    width: 400,
-                    height: 500,
-                    child: Image.asset('assets/layout/$index.png'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 42.0),
-                    child: Container(
-                      width: 400,
-                      height: 385,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(3, (i) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              images[i] == null
-                                  ? Container(
-                                      width: 283,
-                                      height: 110,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          IconButton(
-                                            icon:
-                                                Icon(Icons.add_photo_alternate),
-                                            color: Colors.red,
-                                            onPressed: () => _pickImage(
-                                                i, ImageSource.gallery),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.camera_alt),
-                                            color: Colors.blue,
-                                            onPressed: () => _pickImage(
-                                                i, ImageSource.camera),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : Container(
-                                      width: 283,
-                                      color: Colors.amber,
-                                      child: Image.file(
-                                        images[i]!,
-                                        width: 100,
-                                        height: 110,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                            ],
-                          );
-                        }),
+              child: Container(
+                width: 357,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 357,
+                        height: 500,
+                        // color: Colors.cyan,
+                        child: Image.asset('assets/layout/$index.png'),
                       ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40.0),
+                      child: Center(
+                        child: Container(
+                          width: 300,
+                          // color: Colors.brown,
+                          height: 390,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: List.generate(3, (i) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  images[i] == null
+                                      ? Container(
+                                          color: Colors.cyan,
+                                          width: 283,
+                                          height: 110,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(
+                                                    Icons.add_photo_alternate),
+                                                color: Colors.red,
+                                                onPressed: () => _pickImage(
+                                                    i, ImageSource.gallery),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(Icons.camera_alt),
+                                                color: Colors.blue,
+                                                onPressed: () => _pickImage(
+                                                    i, ImageSource.camera),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Container(
+                                          width: 286,
+                                          color: Colors.black,
+                                          child: Image.file(
+                                            images[i]!,
+                                            width: 100,
+                                            height: 115,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                ],
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Text('You selected card ${widget.cardIndex}'),
