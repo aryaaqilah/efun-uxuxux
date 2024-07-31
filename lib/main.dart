@@ -20,6 +20,10 @@ void main() {
   runApp(MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => AppImageProvider())],
       child: const MyApp()));
+  providers:
+  [ChangeNotifierProvider(create: (_) => AppImageProvider())];
+  child:
+  const MyApp();
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +35,7 @@ class MyApp extends StatelessWidget {
       title: 'Photo Editor',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          scaffoldBackgroundColor: Color(0xffF4F4F4),
+          scaffoldBackgroundColor: Color.fromARGB(255, 212, 236, 78),
           primarySwatch: Colors.blueGrey,
           appBarTheme: const AppBarTheme(
               color: Colors.black, centerTitle: true, elevation: 0),
