@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_editor/helper/app_image_picker.dart';
@@ -7,6 +7,8 @@ import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SelectedCard3x1Page extends StatefulWidget {
   final int cardIndex;
@@ -20,6 +22,7 @@ class SelectedCard3x1Page extends StatefulWidget {
 class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
   late AppImageProvider imageProvider;
   List<File?> images = [null, null, null];
+  ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -37,68 +40,27 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
     });
   }
 
-  Future<File> _createPolaroidImage() async {
-    final img.Image canvas = img.Image(400, 500);
-    img.fill(
-        canvas, img.getColor(255, 255, 255)); // Fill canvas with white color
+  Future<void> _captureAndSaveScreenshot(BuildContext context) async {
+    final directory = (await getApplicationDocumentsDirectory()).path;
+    String fileName = 'polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    String filePath = '$directory/$fileName';
 
-    for (int i = 0; i < images.length; i++) {
-      if (images[i] != null) {
-        img.Image userImage = img.decodeImage(images[i]!.readAsBytesSync())!;
+    screenshotController.capture().then((Uint8List? image) async {
+      if (image != null) {
+        final File imageFile = File(filePath);
+        await imageFile.writeAsBytes(image);
+        // await ImageGallerySaver.saveFile(filePath);
+        // print('Screenshot saved to gallery');
+        imageProvider.changeImageFile(imageFile);
 
-        int targetWidth = 283;
-        int targetHeight = 110;
-
-        double imageAspectRatio = userImage.width / userImage.height;
-        double targetAspectRatio = targetWidth / targetHeight;
-
-        int cropWidth, cropHeight;
-
-        if (imageAspectRatio > targetAspectRatio) {
-          // Gambar lebih lebar daripada target
-          cropHeight = userImage.height;
-          cropWidth = (cropHeight * targetAspectRatio).round();
-        } else {
-          // Gambar lebih tinggi daripada target
-          cropWidth = userImage.width;
-          cropHeight = (cropWidth / targetAspectRatio).round();
-        }
-
-        int x = (userImage.width - cropWidth) ~/ 2;
-        int y = (userImage.height - cropHeight) ~/ 2;
-
-        // Potong gambar
-        img.Image croppedImage =
-            img.copyCrop(userImage, x, y, cropWidth, cropHeight);
-
-        // Resize gambar yang dipotong
-        img.Image resizedImage = img.copyResize(croppedImage,
-            width: targetWidth, height: targetHeight);
-
-        img.copyInto(
-          canvas,
-          resizedImage,
-          dstX: 58,
-          dstY: i * 190, // Adjust positioning as needed
-          blend: false,
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => DisplayImagePage(
+              imageFile: imageFile, imageProvider: imageProvider),
+        ));
       }
-    }
-
-    final Directory tempDir = Directory.systemTemp;
-    final File file = File(
-        '${tempDir.path}/polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg');
-    file.writeAsBytesSync(img.encodeJpg(canvas));
-
-    return file;
-  }
-
-  void _goToNextPage(BuildContext context) async {
-    File polaroidImage = await _createPolaroidImage();
-    imageProvider.changeImageFile(polaroidImage);
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => DisplayImagePage(
-            imageFile: polaroidImage, imageProvider: imageProvider)));
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 
   @override
@@ -110,7 +72,7 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
         actions: [
           IconButton(
             icon: Icon(Icons.arrow_forward),
-            onPressed: () => _goToNextPage(context),
+            onPressed: () => _captureAndSaveScreenshot(context),
           ),
         ],
       ),
@@ -118,64 +80,68 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Stack(
-              children: [
-                Container(
-                  width: 400,
-                  height: 500,
-                  child: Image.asset('assets/layout/$index.png'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 42.0),
-                  child: Container(
+            Screenshot(
+              controller: screenshotController,
+              child: Stack(
+                children: [
+                  Container(
                     width: 400,
-                    height: 385,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(3, (i) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            images[i] == null
-                                ? Container(
-                                    width: 283,
-                                    height: 110,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(Icons.add_photo_alternate),
-                                          color: Colors.red,
-                                          onPressed: () => _pickImage(
-                                              i, ImageSource.gallery),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.camera_alt),
-                                          color: Colors.blue,
-                                          onPressed: () =>
-                                              _pickImage(i, ImageSource.camera),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(
-                                    width: 283,
-                                    color: Colors.amber,
-                                    child: Image.file(
-                                      images[i]!,
-                                      width: 100,
+                    height: 500,
+                    child: Image.asset('assets/layout/$index.png'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 42.0),
+                    child: Container(
+                      width: 400,
+                      height: 385,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(3, (i) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              images[i] == null
+                                  ? Container(
+                                      width: 283,
                                       height: 110,
-                                      fit: BoxFit.cover,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          IconButton(
+                                            icon:
+                                                Icon(Icons.add_photo_alternate),
+                                            color: Colors.red,
+                                            onPressed: () => _pickImage(
+                                                i, ImageSource.gallery),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.camera_alt),
+                                            color: Colors.blue,
+                                            onPressed: () => _pickImage(
+                                                i, ImageSource.camera),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Container(
+                                      width: 283,
+                                      color: Colors.amber,
+                                      child: Image.file(
+                                        images[i]!,
+                                        width: 100,
+                                        height: 110,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                          ],
-                        );
-                      }),
+                            ],
+                          );
+                        }),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Text('You selected card ${widget.cardIndex}'),
           ],
@@ -228,18 +194,7 @@ class DisplayImagePage extends StatelessWidget {
           ),
         ],
       ),
-      body:
-          // Center(
-          //   child: Container(
-          //     width: 400,
-          //     height: 500,
-          //     child: Image.file(
-          //       imageFile,
-          //       fit: BoxFit.cover, // Agar gambar tidak stretch
-          //     ),
-          //   ),
-          // ),
-          Center(
+      body: Center(
         child: Consumer<AppImageProvider>(
           builder: (BuildContext context, value, Widget? child) {
             if (value.currentImage != null) {
