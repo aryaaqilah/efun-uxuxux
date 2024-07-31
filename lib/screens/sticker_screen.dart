@@ -15,7 +15,6 @@ class StickerScreen extends StatefulWidget {
 }
 
 class _StickerScreenState extends State<StickerScreen> {
-
   late AppImageProvider imageProvider;
   LindiController controller = LindiController();
 
@@ -38,11 +37,10 @@ class _StickerScreenState extends State<StickerScreen> {
               onPressed: () async {
                 Uint8List? image = await controller.saveAsUint8List();
                 imageProvider.changeImage(image!);
-                if(!mounted) return;
+                if (!mounted) return;
                 Navigator.of(context).pop();
               },
-              icon: const Icon(Icons.done)
-          )
+              icon: const Icon(Icons.done))
         ],
       ),
       body: Center(
@@ -50,9 +48,8 @@ class _StickerScreenState extends State<StickerScreen> {
           builder: (BuildContext context, value, Widget? child) {
             if (value.currentImage != null) {
               return LindiStickerWidget(
-                controller: controller,
-                child: Image.memory(value.currentImage!)
-              );
+                  controller: controller,
+                  child: Image.memory(value.currentImage!));
             }
             return const Center(
               child: CircularProgressIndicator(),
@@ -69,52 +66,47 @@ class _StickerScreenState extends State<StickerScreen> {
             children: [
               Expanded(
                 child: Container(
-                  color: Colors.black,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: Stickers().list()[index].length,
-                    itemBuilder: (BuildContext context, int idx){
-                      String sticker = Stickers().list()[index][idx];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: FittedBox(
-                                fit: BoxFit.fill,
-                                child: InkWell(
-                                  onTap: (){
-                                    controller.addWidget(
-                                        Image.asset(sticker, width: 100)
-                                    );
-                                  },
-                                  child: Image.asset(sticker),
+                    color: Colors.black,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: Stickers().list()[index].length,
+                      itemBuilder: (BuildContext context, int idx) {
+                        String sticker = Stickers().list()[index][idx];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  child: InkWell(
+                                    onTap: () {
+                                      controller.addWidget(
+                                          Image.asset(sticker, width: 100));
+                                    },
+                                    child: Image.asset(sticker),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  )
-                ),
+                            ],
+                          ),
+                        );
+                      },
+                    )),
               ),
               SingleChildScrollView(
                 child: Row(
                   children: [
-                    for(int i = 0; i < Stickers().list().length; i++)
-                    _bottomBatItem(
-                      i,
-                      Stickers().list()[i][0],
-                      onPress: () {
+                    for (int i = 0; i < Stickers().list().length; i++)
+                      _bottomBatItem(i, Stickers().list()[i][0], onPress: () {
                         setState(() {
                           index = i;
                         });
-                      }
-                    )
+                      })
                   ],
                 ),
               )
@@ -125,7 +117,8 @@ class _StickerScreenState extends State<StickerScreen> {
     );
   }
 
-  Widget _bottomBatItem(int idx, String icon, {Color? color, required onPress}){
+  Widget _bottomBatItem(int idx, String icon,
+      {Color? color, required onPress}) {
     return InkWell(
       onTap: onPress,
       child: Padding(
@@ -150,5 +143,4 @@ class _StickerScreenState extends State<StickerScreen> {
       ),
     );
   }
-
 }
