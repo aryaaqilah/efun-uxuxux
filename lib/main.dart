@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:photo_editor/screens/adjust_screen.dart';
@@ -21,6 +20,10 @@ void main() {
   runApp(MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => AppImageProvider())],
       child: const MyApp()));
+  providers:
+  [ChangeNotifierProvider(create: (_) => AppImageProvider())];
+  child:
+  const MyApp();
 }
 
 class MyApp extends StatelessWidget {
@@ -32,14 +35,15 @@ class MyApp extends StatelessWidget {
       title: 'Photo Editor',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          scaffoldBackgroundColor: Color(0xffF4F4F4),
+          scaffoldBackgroundColor: Color.fromARGB(255, 212, 236, 78),
           primarySwatch: Colors.blueGrey,
           appBarTheme: const AppBarTheme(
               color: Colors.black, centerTitle: true, elevation: 0),
           sliderTheme: const SliderThemeData(
               showValueIndicator: ShowValueIndicator.always)),
       routes: <String, WidgetBuilder>{
-        '/': (_) => SplashScreen(), // Set SplashScreen as the initial route
+        '/': (_) =>
+            const SplashScreen(), // Set SplashScreen as the initial route
         '/start': (_) => const StartScreen(),
         '/history': (_) => const HistoryScreen(),
         '/home': (_) => const HomeScreen(),

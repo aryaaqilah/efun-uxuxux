@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:photo_editor/screens/choose_image_1x1_screen.dart';
+import 'package:photo_editor/screens/choose_image_2x2_screen.dart';
+import 'package:photo_editor/screens/choose_image_3x1_screen.dart';
+import 'package:photo_editor/screens/choose_image_3x2_screen.dart';
 
 class ChooseLayout extends StatefulWidget {
   const ChooseLayout({super.key});
@@ -18,12 +22,39 @@ class _ChooseLayoutState extends State<ChooseLayout> {
 
   void _onNextPressed() {
     if (_selectedCardIndex != -1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SelectedCardPage(cardIndex: _selectedCardIndex),
-        ),
-      );
+      if (_selectedCardIndex == 1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SelectedCard3x1Page(cardIndex: _selectedCardIndex),
+          ),
+        );
+      } else if (_selectedCardIndex == 0) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SelectedCard1x1Page(cardIndex: _selectedCardIndex),
+          ),
+        );
+      } else if (_selectedCardIndex == 2) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SelectedCard2x2Page(cardIndex: _selectedCardIndex),
+          ),
+        );
+      } else if (_selectedCardIndex == 3) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SelectedCard3x2Page(cardIndex: _selectedCardIndex),
+          ),
+        );
+      }
     }
   }
 
@@ -117,24 +148,6 @@ class _ChooseLayoutState extends State<ChooseLayout> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class SelectedCardPage extends StatelessWidget {
-  final int cardIndex;
-
-  SelectedCardPage({required this.cardIndex});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Selected Card Page'),
-      ),
-      body: Center(
-        child: Text('You selected card $cardIndex'),
       ),
     );
   }
