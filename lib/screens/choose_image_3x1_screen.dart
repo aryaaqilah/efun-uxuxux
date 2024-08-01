@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_editor/helper/app_image_picker.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
+import 'package:photo_editor/screens/sticker_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -54,8 +55,7 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
         imageProvider.changeImageFile(imageFile);
 
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => DisplayImagePage(
-              imageFile: imageFile, imageProvider: imageProvider),
+          builder: (context) => StickerScreen(),
         ));
       }
     }).catchError((onError) {
