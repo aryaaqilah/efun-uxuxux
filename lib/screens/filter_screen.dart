@@ -78,7 +78,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 Uint8List? bytes = await screenshotController.capture();
                 imageProvider.changeImage(bytes!);
                 if (!mounted) return;
-                Navigator.of(context).pushReplacementNamed('/frame');
+                Navigator.of(context).pushReplacementNamed('/frame3x1');
               },
               icon: const Icon(Icons.done))
         ],

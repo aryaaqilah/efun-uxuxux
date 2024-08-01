@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         '/home': (_) => const HomeScreen(),
         '/crop': (_) => const CropScreen(),
         '/filter': (_) => const FilterScreen(),
-        '/frame': (_) => const ChooseFrameScreen(),
+        '/frame3x1': (_) => const ChooseFrameScreen(),
         '/adjust': (_) => const AdjustScreen(),
         '/fit': (_) => const FitScreen(),
         '/tint': (_) => const TintScreen(),
