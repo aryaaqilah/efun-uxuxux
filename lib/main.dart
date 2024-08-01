@@ -3,7 +3,7 @@ import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:photo_editor/screens/adjust_screen.dart';
 import 'package:photo_editor/screens/blur_screen.dart';
 import 'package:photo_editor/screens/crop_screen.dart';
-import 'package:photo_editor/screens/custom_frame.dart';
+import 'package:photo_editor/screens/custom_frame3x1.dart';
 import 'package:photo_editor/screens/draw_screen.dart';
 import 'package:photo_editor/screens/filter_screen.dart';
 import 'package:photo_editor/screens/fit_screen.dart';
@@ -13,8 +13,8 @@ import 'package:photo_editor/screens/start_screen.dart';
 import 'package:photo_editor/screens/sticker_screen.dart';
 import 'package:photo_editor/screens/text_screen.dart';
 import 'package:photo_editor/screens/tint_screen.dart';
-import 'package:photo_editor/screens/splash_screen.dart'; // Import the SplashScreen
-import 'package:photo_editor/screens/history_screen.dart'; // Import the SplashScreen
+import 'package:photo_editor/screens/splash_screen.dart'; 
+import 'package:photo_editor/screens/history_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
