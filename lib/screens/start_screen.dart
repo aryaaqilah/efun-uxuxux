@@ -33,7 +33,7 @@ class _StartScreenState extends State<StartScreen> {
         SizedBox(
           width: double.infinity,
           child: Image.asset(
-            'assets/images/wallpaper.jpg',
+            'assets/images/wallpaper.png',
             fit: BoxFit.cover,
           ),
         ),
