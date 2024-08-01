@@ -6,6 +6,7 @@ import 'package:photo_editor/helper/app_image_picker.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:photo_editor/screens/test.dart';
 import 'package:photo_editor/screens/test2.dart';
+import 'package:photo_editor/screens/history_screen.dart';
 import 'package:provider/provider.dart';
 
 class StartScreen extends StatefulWidget {
@@ -59,35 +60,40 @@ class _StartScreenState extends State<StartScreen> {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     AppImagePicker(source: ImageSource.gallery).pick(
+                  //         onPick: (File? image) {
+                  //       imageProvider.changeImageFile(image!);
+                  //       Navigator.of(context).pushReplacementNamed('/home');
+                  //     });
+                  //   },
+                  //   child: const Text("History"),
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     AppImagePicker(source: ImageSource.camera).pick(
+                  //         onPick: (File? image) {
+                  //       imageProvider.changeImageFile(image!);
+                  //       Navigator.of(context).pushReplacementNamed('/home');
+                  //     });
+                  //   },
+                  //   child: const Text("Camera"),
+                  // ),
                   ElevatedButton(
                     onPressed: () {
-                      AppImagePicker(source: ImageSource.gallery).pick(
-                          onPick: (File? image) {
-                        imageProvider.changeImageFile(image!);
-                        Navigator.of(context).pushReplacementNamed('/home');
-                      });
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => HistoryScreen()));
                     },
                     child: const Text("History"),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      AppImagePicker(source: ImageSource.camera).pick(
-                          onPick: (File? image) {
-                        imageProvider.changeImageFile(image!);
-                        Navigator.of(context).pushReplacementNamed('/home');
-                      });
-                    },
-                    child: const Text("Camera"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ChooseLayout(
-                              // title: 'Suara Puan',
-                              )));
+                          builder: (context) => ChooseLayout()));
                     },
                     child: const Text("Edit"),
-                  )
+                  ),
                 ],
               )),
             )
