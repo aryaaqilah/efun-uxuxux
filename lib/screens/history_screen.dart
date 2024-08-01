@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
+  @override
+  _HistoryScreenState createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     // Dummy data for the grid
     final List<Map<String, String>> historyItems = [
-      {'image': 'assets/images/image1.jpg', 'date': '1 July 2024'},
-      {'image': 'assets/images/image2.jpg', 'date': '12 July 2024'},
-      {'image': 'assets/images/image3.jpg', 'date': '12 July 2024'},
-      {'image': 'assets/images/image4.jpg', 'date': '1 July 2024'},
-      {'image': 'assets/images/image5.jpg', 'date': '12 July 2024'},
-      {'image': 'assets/images/image6.jpg', 'date': '12 July 2024'},
-      {'image': 'assets/images/image7.jpg', 'date': '1 July 2024'},
-      {'image': 'assets/images/image8.jpg', 'date': '12 July 2024'},
-      {'image': 'assets/images/image9.jpg', 'date': '12 July 2024'},
+      {'image': 'assets/images/t1.jpg', 'date': '1 July 2024'},
+      {'image': 'assets/images/t2.jpg', 'date': '12 July 2024'},
+      {'image': 'assets/images/t3.jpg', 'date': '12 July 2024'},
+      {'image': 'assets/images/t4.jpg', 'date': '1 July 2024'},
+      {'image': 'assets/images/t5.jpg', 'date': '12 July 2024'},
+      {'image': 'assets/images/t6.jpg', 'date': '12 July 2024'},
+      {'image': 'assets/images/t1.jpg', 'date': '1 July 2024'},
+      {'image': 'assets/images/t2.jpg', 'date': '12 July 2024'},
+      {'image': 'assets/images/t3.jpg', 'date': '12 July 2024'},
     ];
 
     return Scaffold(
