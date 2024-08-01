@@ -3,6 +3,7 @@ import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:photo_editor/screens/adjust_screen.dart';
 import 'package:photo_editor/screens/blur_screen.dart';
 import 'package:photo_editor/screens/crop_screen.dart';
+import 'package:photo_editor/screens/custom_frame.dart';
 import 'package:photo_editor/screens/draw_screen.dart';
 import 'package:photo_editor/screens/filter_screen.dart';
 import 'package:photo_editor/screens/fit_screen.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         '/home': (_) => const HomeScreen(),
         '/crop': (_) => const CropScreen(),
         '/filter': (_) => const FilterScreen(),
+        '/frame': (_) => const ChooseFrameScreen(),
         '/adjust': (_) => const AdjustScreen(),
         '/fit': (_) => const FitScreen(),
         '/tint': (_) => const TintScreen(),

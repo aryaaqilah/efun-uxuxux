@@ -7,14 +7,14 @@ import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
-class FilterScreen extends StatefulWidget {
-  const FilterScreen({Key? key}) : super(key: key);
+class ChooseFrameScreen extends StatefulWidget {
+  const ChooseFrameScreen({Key? key}) : super(key: key);
 
   @override
-  State<FilterScreen> createState() => _FilterScreenState();
+  State<ChooseFrameScreen> createState() => _ChooseFrameScreenState();
 }
 
-class _FilterScreenState extends State<FilterScreen> {
+class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
   late Filter currentFilter;
   late List<Filter> filters;
 
@@ -36,10 +36,14 @@ class _FilterScreenState extends State<FilterScreen> {
         backgroundColor: const Color(0xFFF4F4F4),
         toolbarHeight: 60,
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            Uint8List? bytes = await screenshotController.capture();
+            imageProvider.changeImage(bytes!);
+            if (!mounted) return;
+            Navigator.of(context).pushReplacementNamed('/filter');
+          },
+        ),
         title: Consumer<AppImageProvider>(
           builder: (BuildContext context, value, Widget? child) {
             return Row(
@@ -54,7 +58,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 ),
                 const SizedBox(width: 8),
                 const Text(
-                  'Add Filter',
+                  'Custom Frame',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
@@ -78,7 +82,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 Uint8List? bytes = await screenshotController.capture();
                 imageProvider.changeImage(bytes!);
                 if (!mounted) return;
-                Navigator.of(context).pushReplacementNamed('/frame');
+                Navigator.of(context).pushReplacementNamed('/sticker');
               },
               icon: const Icon(Icons.done))
         ],
@@ -158,81 +162,6 @@ class _FilterScreenState extends State<FilterScreen> {
           );
         })),
       ),
-      // bottomNavigationBar: Container(
-      //   width: double.infinity,
-      //   height: 100,
-      //   color: const Color(0xFFF4F4F4),
-      //   child: SafeArea(
-      //     child: Column(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Expanded(
-      //           child: Consumer<AppImageProvider>(
-      //             builder: (BuildContext context, value, Widget? child) {
-      //               return ListView.builder(
-      //                 scrollDirection: Axis.horizontal,
-      //                 itemCount: filters.length,
-      //                 itemBuilder: (BuildContext context, int index) {
-      //                   Filter filter = filters[index];
-      //                   return Padding(
-      //                     padding: const EdgeInsets.symmetric(horizontal: 10),
-      //                     child: Column(
-      //                       mainAxisAlignment: MainAxisAlignment.center,
-      //                       children: [
-      //                         Container(
-      //                           decoration: BoxDecoration(
-      //                             border: Border.all(
-      //                               color: const Color(0xFFD9D9D9),
-      //                               width: 2,
-      //                             ),
-      //                           ),
-      //                           child: SizedBox(
-      //                             width: 50,
-      //                             height: 50,
-      //                             child: FittedBox(
-      //                               fit: BoxFit.fill,
-      //                               child: InkWell(
-      //                                 onTap: () {
-      //                                   setState(() {
-      //                                     currentFilter = filter;
-      //                                   });
-      //                                 },
-      //                                 child: ColorFiltered(
-      //                                   colorFilter:
-      //                                       ColorFilter.matrix(filter.matrix),
-      //                                   child:
-      //                                       Image.memory(value.currentImage!),
-      //                                 ),
-      //                               ),
-      //                             ),
-      //                           ),
-      //                         ),
-      //                         const SizedBox(height: 5),
-      //                         Text(
-      //                           filter.filterName,
-      //                           style: const TextStyle(color: Colors.black),
-      //                         ),
-      //                       ],
-      //                     ),
-      //                   );
-      //                 },
-      //               );
-      //             },
-      //           ),
-      //         ),
-      //         Container(
-      //           padding: const EdgeInsets.only(bottom: 8.0),
-      //           child: const Text(
-      //             'Add Filter',
-      //             style: TextStyle(
-      //               fontSize: 18,
-      //             ),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

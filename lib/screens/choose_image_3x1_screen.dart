@@ -198,7 +198,10 @@ class DisplayImagePage extends StatelessWidget {
         title: Text('Generated Polaroid Image'),
         actions: [
           TextButton(
-            onPressed: () => _savePhoto(context),
+            // onPressed: () => _savePhoto(context),
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed('/filter');
+            },
             child: const Text(
               'Save',
               style: TextStyle(color: Colors.white),
