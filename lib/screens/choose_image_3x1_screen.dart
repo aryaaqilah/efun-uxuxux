@@ -55,7 +55,9 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
         imageProvider.changeImageFile(imageFile);
 
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => StickerScreen(),
+          builder: (context) => DisplayImagePage(
+              imageFile: imageFile, imageProvider: imageProvider),
+          // builder: (context) => StickerScreen(),
         ));
       }
     }).catchError((onError) {
