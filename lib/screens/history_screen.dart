@@ -31,7 +31,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text('History'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
