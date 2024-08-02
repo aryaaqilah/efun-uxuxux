@@ -63,10 +63,6 @@ class _StartScreenState extends State<StartScreen> {
                         builder: (context) => const HistoryScreen(),
                       ));
                     },
-                    child: const Text(
-                      "History",
-                      style: TextStyle(fontSize: 15), // Change font size here
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor:
                           const Color(0xFF49919D), // Change button color
@@ -77,20 +73,17 @@ class _StartScreenState extends State<StartScreen> {
                       ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
+                    ),
+                    child: const Text(
+                      "History",
+                      style: TextStyle(fontSize: 15), // Change font size here
                     ),
                   ),
                   const SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            const ChooseLayout(), // Ensure this widget exists
-                      ));
+                      Navigator.of(context).pushReplacementNamed('/layout');
                     },
-                    child: const Text(
-                      "Edit",
-                      style: TextStyle(fontSize: 15), // Change font size here
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor:
                           const Color(0xFF49919D), // Change button color
@@ -101,6 +94,10 @@ class _StartScreenState extends State<StartScreen> {
                       ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
+                    ),
+                    child: const Text(
+                      "Edit",
+                      style: TextStyle(fontSize: 15), // Change font size here
                     ),
                   ),
                 ],

@@ -72,31 +72,15 @@ class _StickerScreenState extends State<StickerScreen> {
         ),
         title: Consumer<AppImageProvider>(
           builder: (BuildContext context, value, Widget? child) {
-            return Row(
+            return const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: () {
-                    imageProvider.undo();
-                  },
-                  icon: Icon(Icons.undo,
-                      color: value.canUndo ? Colors.black : Colors.grey),
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Sticker',
+                Text(
+                  'Add Sticker',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
                   ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () {
-                    imageProvider.redo();
-                  },
-                  icon: Icon(Icons.redo,
-                      color: value.canRedo ? Colors.black : Colors.grey),
                 ),
               ],
             );
@@ -104,9 +88,13 @@ class _StickerScreenState extends State<StickerScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () => _captureAndSaveScreenshot(context),
-            icon: const Icon(Icons.save),
-          )
+              onPressed: () async {
+                Uint8List? bytes = await screenshotController.capture();
+                imageProvider.changeImage(bytes!);
+                if (!mounted) return;
+                Navigator.of(context).pushReplacementNamed('/save');
+              },
+              icon: const Icon(Icons.done))
         ],
       ),
       body: Center(
@@ -144,7 +132,7 @@ class _StickerScreenState extends State<StickerScreen> {
       ),
       bottomNavigationBar: Container(
         width: double.infinity,
-        height: 120,
+        height: 100,
         color: const Color(0xFFF4F4F4),
         child: SafeArea(
           child: Column(
@@ -164,8 +152,8 @@ class _StickerScreenState extends State<StickerScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 60,
-                                height: 60,
+                                width: 40,
+                                height: 40,
                                 child: FittedBox(
                                   fit: BoxFit.fill,
                                   child: InkWell(
@@ -203,7 +191,7 @@ class _StickerScreenState extends State<StickerScreen> {
   }
 
   Widget _bottomBatItem(int idx, String icon,
-      {Color? color, required onPress}) {
+      {required onPress}) {
     return InkWell(
       onTap: onPress,
       child: Padding(

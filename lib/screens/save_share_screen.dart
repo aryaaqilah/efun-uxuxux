@@ -1,18 +1,19 @@
 import 'dart:typed_data';
-
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
-class ChooseFrameScreen extends StatefulWidget {
-  const ChooseFrameScreen({Key? key}) : super(key: key);
+class SaveShareScreen extends StatefulWidget {
+  const SaveShareScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChooseFrameScreen> createState() => _ChooseFrameScreenState();
+  State<SaveShareScreen> createState() => _SaveShareScreenState();
 }
 
-class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
+class _SaveShareScreenState extends State<SaveShareScreen> {
   String? _overlayImagePath;
 
   late AppImageProvider imageProvider;
@@ -33,10 +34,7 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () async {
-            // Uint8List? bytes = await screenshotController.capture();
-            // imageProvider.changeImage(bytes!);
-            // if (!mounted) return;
-            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed('/sticker');
           },
         ),
         title: Consumer<AppImageProvider>(
@@ -44,31 +42,13 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
             return const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // IconButton(
-                //   onPressed: () {
-                //     imageProvider.undo();
-                //     setState(() {});
-                //   },
-                //   icon: Icon(Icons.undo,
-                //       color: value.canUndo ? Colors.black : Colors.grey),
-                // ),
-                // const SizedBox(width: 8),
                 Text(
-                  'Custom Your Frame',
+                  'Save n Share',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
                   ),
                 ),
-                // const SizedBox(width: 8),
-                // IconButton(
-                //   onPressed: () {
-                //     imageProvider.redo();
-                //     setState(() {});
-                //   },
-                //   icon: Icon(Icons.redo,
-                //       color: value.canRedo ? Colors.black : Colors.grey),
-                // ),
               ],
             );
           },
@@ -76,47 +56,19 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
         actions: [
           IconButton(
               onPressed: () async {
-                Uint8List? bytes = await screenshotController.capture();
-                imageProvider.changeImage(bytes!);
-                if (!mounted) return;
-                Navigator.of(context).pushReplacementNamed('/sticker');
+                Navigator.of(context).pushReplacementNamed('/history');
               },
-              icon: const Icon(Icons.done))
+              icon: const Icon(Icons.close))
         ],
       ),
       body: Container(
         color: const Color(0xFFD9D9D9),
         child: Center(
           child: Consumer<AppImageProvider>(
-            builder: (BuildContext context, value, Widget? child) {
-              if (value.currentImage != null) {
-                // return overlayImage(
-                //   value.currentImage!,
-                //   _overlayImagePath ?? '',
-                // );
-                return Screenshot(
-                  controller: screenshotController,
-                  child: Stack(
-                    children: [
-                      Image.memory(value.currentImage!),
-                      if (_overlayImagePath != null &&
-                          _overlayImagePath!.isNotEmpty)
-                        Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Image.asset(
-                              _overlayImagePath!,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+             builder: (BuildContext context, value, Widget? child) {
+              return value.currentImage != null
+                  ? Image.memory(value.currentImage!)
+                  : const CircularProgressIndicator();
             },
           ),
         ),
@@ -238,21 +190,3 @@ Widget _bottomBarItem(String imagePath, String label,
     ),
   );
 }
-
-// Widget overlayImage(Uint8List imageProviderImage, String overlayAssetPath) {
-//   return Stack(
-//     children: [
-//       Image.memory(imageProviderImage),
-//       if (overlayAssetPath.isNotEmpty)
-//         Positioned.fill(
-//           child: Align(
-//             alignment: Alignment.center,
-//             child: Image.asset(
-//               overlayAssetPath,
-//               fit: BoxFit.contain,
-//             ),
-//           ),
-//         ),
-//     ],
-//   );
-// }

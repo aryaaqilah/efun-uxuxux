@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:photo_editor/helper/filters.dart';
 import 'package:photo_editor/model/filter.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
+import 'package:photo_editor/screens/choose_image_1x1_screen.dart';
+import 'package:photo_editor/screens/choose_image_3x1_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 class FilterScreen extends StatefulWidget {
-  const FilterScreen({Key? key}) : super(key: key);
+  final int layoutIndex;
+
+  const FilterScreen({Key? key, required this.layoutIndex}) : super(key: key);
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -49,10 +53,27 @@ class _FilterScreenState extends State<FilterScreen> {
         backgroundColor: const Color(0xFFF4F4F4),
         toolbarHeight: 60,
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (widget.layoutIndex == 0) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      SelectedCard1x1Page(cardIndex: widget.layoutIndex),
+                ),
+              );
+            }else if (widget.layoutIndex == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      SelectedCard3x1Page(cardIndex: widget.layoutIndex),
+                ),
+              );
+            }
+          },
+        ),
         title: Consumer<AppImageProvider>(
           builder: (BuildContext context, value, Widget? child) {
             return const Row(
@@ -91,7 +112,11 @@ class _FilterScreenState extends State<FilterScreen> {
                 Uint8List? bytes = await screenshotController.capture();
                 imageProvider.changeImage(bytes!);
                 if (!mounted) return;
-                Navigator.of(context).pushReplacementNamed('/frame3x1');
+                if (widget.layoutIndex == 0) {
+                  Navigator.of(context).pushReplacementNamed('/frame1x1');
+                } else if (widget.layoutIndex == 1) {
+                  Navigator.of(context).pushReplacementNamed('/frame3x1');
+                }
               },
               icon: const Icon(Icons.done))
         ],

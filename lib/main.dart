@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
-import 'package:photo_editor/screens/adjust_screen.dart';
-import 'package:photo_editor/screens/blur_screen.dart';
+// import 'package:photo_editor/screens/adjust_screen.dart';
+// import 'package:photo_editor/screens/blur_screen.dart';
+// import 'package:photo_editor/screens/draw_screen.dart';
+// import 'package:photo_editor/screens/fit_screen.dart';
+// import 'package:photo_editor/screens/home_screen.dart';
+// import 'package:photo_editor/screens/mask_screen.dart';
+// import 'package:photo_editor/screens/tint_screen.dart';
 import 'package:photo_editor/screens/crop_screen.dart';
 import 'package:photo_editor/screens/custom_frame3x1.dart';
-import 'package:photo_editor/screens/draw_screen.dart';
 import 'package:photo_editor/screens/filter_screen.dart';
-import 'package:photo_editor/screens/fit_screen.dart';
-import 'package:photo_editor/screens/home_screen.dart';
-import 'package:photo_editor/screens/mask_screen.dart';
+import 'package:photo_editor/screens/save_share_screen.dart';
 import 'package:photo_editor/screens/start_screen.dart';
 import 'package:photo_editor/screens/sticker_screen.dart';
+import 'package:photo_editor/screens/test2.dart';
 import 'package:photo_editor/screens/text_screen.dart';
-import 'package:photo_editor/screens/tint_screen.dart';
-import 'package:photo_editor/screens/splash_screen.dart'; 
+import 'package:photo_editor/screens/splash_screen.dart';
 import 'package:photo_editor/screens/history_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -33,32 +35,32 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Photo Editor',
+      title: 'E-Fun',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          scaffoldBackgroundColor: Color.fromARGB(244, 244, 244, 244),
+          scaffoldBackgroundColor: const Color.fromARGB(244, 244, 244, 244),
           primarySwatch: Colors.blueGrey,
           appBarTheme: const AppBarTheme(
               color: Colors.black, centerTitle: true, elevation: 0),
           sliderTheme: const SliderThemeData(
               showValueIndicator: ShowValueIndicator.always)),
       routes: <String, WidgetBuilder>{
-        '/': (_) =>
-            const SplashScreen(), // Set SplashScreen as the initial route
+        '/': (_) => const SplashScreen(),
         '/start': (_) => const StartScreen(),
         '/history': (_) => const HistoryScreen(),
-        '/home': (_) => const HomeScreen(),
+        '/layout': (_) => const ChooseLayout(),
         '/crop': (_) => const CropScreen(),
-        '/filter': (_) => const FilterScreen(),
         '/frame3x1': (_) => const ChooseFrameScreen(),
-        '/adjust': (_) => const AdjustScreen(),
-        '/fit': (_) => const FitScreen(),
-        '/tint': (_) => const TintScreen(),
-        '/blur': (_) => const BlurScreen(),
         '/sticker': (_) => const StickerScreen(),
+        '/save': (_) => const SaveShareScreen(),
         '/text': (_) => const TextScreen(),
-        '/draw': (_) => const DrawScreen(),
-        '/mask': (_) => const MaskScreen()
+        // '/home': (_) => const HomeScreen(),
+        // '/adjust': (_) => const AdjustScreen(),
+        // '/fit': (_) => const FitScreen(),
+        // '/tint': (_) => const TintScreen(),
+        // '/blur': (_) => const BlurScreen(),
+        // '/draw': (_) => const DrawScreen(),
+        // '/mask': (_) => const MaskScreen()
       },
       initialRoute: '/', // This ensures SplashScreen is the first screen
     );
