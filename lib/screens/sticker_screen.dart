@@ -1,11 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:lindi_sticker_widget/lindi_controller.dart';
 import 'package:lindi_sticker_widget/lindi_sticker_widget.dart';
 import 'package:photo_editor/helper/stickers.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class StickerScreen extends StatefulWidget {
   const StickerScreen({Key? key}) : super(key: key);
@@ -15,7 +19,11 @@ class StickerScreen extends StatefulWidget {
 }
 
 class _StickerScreenState extends State<StickerScreen> {
+  String? _overlayImagePath;
+
   late AppImageProvider imageProvider;
+
+  ScreenshotController screenshotController = ScreenshotController();
   LindiController controller = LindiController();
 
   int index = 0;
@@ -26,30 +34,107 @@ class _StickerScreenState extends State<StickerScreen> {
     super.initState();
   }
 
+  Future<void> _captureAndSaveScreenshot(BuildContext context) async {
+    final directory = (await getApplicationDocumentsDirectory()).path;
+    String fileName = 'sticker_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    String filePath = '$directory/$fileName';
+
+    screenshotController.capture().then((Uint8List? image) async {
+      if (image != null) {
+        final File imageFile = File(filePath);
+        await imageFile.writeAsBytes(image);
+        imageProvider.changeImageFile(imageFile);
+
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => DisplayImagePage(
+              imageFile: imageFile, imageProvider: imageProvider),
+        ));
+      }
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const CloseButton(),
-        title: const Text('Sticker'),
+        backgroundColor: const Color(0xFFF4F4F4),
+        toolbarHeight: 60,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            Uint8List? bytes = await screenshotController.capture();
+            imageProvider.changeImage(bytes!);
+            if (!mounted) return;
+            Navigator.of(context).pushReplacementNamed('/filter');
+          },
+        ),
+        title: Consumer<AppImageProvider>(
+          builder: (BuildContext context, value, Widget? child) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    imageProvider.undo();
+                  },
+                  icon: Icon(Icons.undo,
+                      color: value.canUndo ? Colors.black : Colors.grey),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Sticker',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () {
+                    imageProvider.redo();
+                  },
+                  icon: Icon(Icons.redo,
+                      color: value.canRedo ? Colors.black : Colors.grey),
+                ),
+              ],
+            );
+          },
+        ),
         actions: [
           IconButton(
-              onPressed: () async {
-                Uint8List? image = await controller.saveAsUint8List();
-                imageProvider.changeImage(image!);
-                if (!mounted) return;
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.done))
+            onPressed: () => _captureAndSaveScreenshot(context),
+            icon: const Icon(Icons.save),
+          )
         ],
       ),
       body: Center(
         child: Consumer<AppImageProvider>(
           builder: (BuildContext context, value, Widget? child) {
             if (value.currentImage != null) {
-              return LindiStickerWidget(
-                  controller: controller,
-                  child: Image.memory(value.currentImage!));
+              return Screenshot(
+                controller: screenshotController,
+                child: Stack(
+                  children: [
+                    LindiStickerWidget(
+                      controller: controller,
+                      child: Image.memory(value.currentImage!),
+                    ),
+                    if (_overlayImagePath != null &&
+                        _overlayImagePath!.isNotEmpty)
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            _overlayImagePath!,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
             }
             return const Center(
               child: CircularProgressIndicator(),
@@ -60,13 +145,13 @@ class _StickerScreenState extends State<StickerScreen> {
       bottomNavigationBar: Container(
         width: double.infinity,
         height: 120,
-        color: Colors.black,
+        color: const Color(0xFFF4F4F4),
         child: SafeArea(
           child: Column(
             children: [
               Expanded(
                 child: Container(
-                    color: Colors.black,
+                    color: const Color(0xFFF4F4F4),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: Stickers().list()[index].length,
@@ -139,6 +224,67 @@ class _StickerScreenState extends State<StickerScreen> {
               child: Image.asset(icon, width: 30),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class DisplayImagePage extends StatelessWidget {
+  final File imageFile;
+  final AppImageProvider imageProvider;
+
+  DisplayImagePage({required this.imageFile, required this.imageProvider});
+
+  Future<void> _savePhoto(BuildContext context) async {
+    final result = await ImageGallerySaver.saveImage(
+      imageFile.readAsBytesSync(),
+      quality: 100,
+      name: "${DateTime.now().millisecondsSinceEpoch}",
+    );
+
+    if (!result.containsKey('isSuccess') || !result['isSuccess']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong!'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Image saved to Gallery'),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Generated Polaroid Image'),
+        actions: [
+          TextButton(
+            onPressed: () => _savePhoto(context),
+            child: const Text(
+              'Save',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+      body: Center(
+        child: Consumer<AppImageProvider>(
+          builder: (BuildContext context, value, Widget? child) {
+            if (value.currentImage != null) {
+              return Image.memory(
+                value.currentImage!,
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ),
       ),
     );
