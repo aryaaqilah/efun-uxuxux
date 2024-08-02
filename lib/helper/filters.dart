@@ -5,7 +5,7 @@ class Filters {
   List<Filter> list() {
     return <Filter>[
       Filter(
-        'Original',
+        'No Filter',
         [
           1, 0, 0, 0, 0,
           0, 1, 0, 0, 0,

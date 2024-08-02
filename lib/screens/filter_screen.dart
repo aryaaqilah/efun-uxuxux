@@ -19,6 +19,8 @@ class _FilterScreenState extends State<FilterScreen> {
   late List<Filter> filters;
 
   late AppImageProvider imageProvider;
+  late int indexOri;
+  // late Uint8List originalImage;
   ScreenshotController screenshotController = ScreenshotController();
 
   @override
@@ -26,8 +28,19 @@ class _FilterScreenState extends State<FilterScreen> {
     filters = Filters().list();
     currentFilter = filters[0];
     imageProvider = Provider.of<AppImageProvider>(context, listen: false);
+    indexOri = imageProvider.index - 1;
+    // originalImage = imageProvider.getImageByIndex(indexOri);
     super.initState();
   }
+
+  // void _applyFilter(ColorFilter filter) async {
+  //   Uint8List filteredBytes =
+  //       await screenshotController.captureFromWidget(ColorFiltered(
+  //     colorFilter: filter,
+  //     child: Image.memory(originalImage),
+  //   ));
+  //   imageProvider.changeImage(filteredBytes);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -42,32 +55,32 @@ class _FilterScreenState extends State<FilterScreen> {
             }),
         title: Consumer<AppImageProvider>(
           builder: (BuildContext context, value, Widget? child) {
-            return Row(
+            return const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: () {
-                    imageProvider.undo();
-                  },
-                  icon: Icon(Icons.undo,
-                      color: value.canUndo ? Colors.black : Colors.grey),
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Add Filter',
+                // IconButton(
+                //   onPressed: () {
+                //     imageProvider.undo();
+                //   },
+                //   icon: Icon(Icons.undo,
+                //       color: value.canUndo ? Colors.black : Colors.grey),
+                // ),
+                // const SizedBox(width: 8),
+                Text(
+                  "Add Filter",
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () {
-                    imageProvider.redo();
-                  },
-                  icon: Icon(Icons.redo,
-                      color: value.canRedo ? Colors.black : Colors.grey),
-                ),
+                // const SizedBox(width: 8),
+                // IconButton(
+                //   onPressed: () {
+                //     imageProvider.redo();
+                //   },
+                //   icon: Icon(Icons.redo,
+                //       color: value.canRedo ? Colors.black : Colors.grey),
+                // ),
               ],
             );
           },
@@ -93,13 +106,18 @@ class _FilterScreenState extends State<FilterScreen> {
                   controller: screenshotController,
                   child: ColorFiltered(
                       colorFilter: ColorFilter.matrix(currentFilter.matrix),
-                      child: Image.memory(value.currentImage!)),
+                      child: Image.memory(value.getImageByIndex(indexOri)!)),
                 );
               }
               return const Center(
                 child: CircularProgressIndicator(),
               );
             },
+            // builder: (BuildContext context, value, Widget? child) {
+            //   return value.currentImage != null
+            //       ? Image.memory(value.currentImage!)
+            //       : const CircularProgressIndicator();
+            // },
           ),
         ),
       ),
@@ -136,6 +154,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             onTap: () {
                               setState(() {
                                 currentFilter = filter;
+                                // _applyFilter(ColorFilter.matrix(filter.matrix));
                               });
                             },
                             child: ColorFiltered(
@@ -158,81 +177,6 @@ class _FilterScreenState extends State<FilterScreen> {
           );
         })),
       ),
-      // bottomNavigationBar: Container(
-      //   width: double.infinity,
-      //   height: 100,
-      //   color: const Color(0xFFF4F4F4),
-      //   child: SafeArea(
-      //     child: Column(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Expanded(
-      //           child: Consumer<AppImageProvider>(
-      //             builder: (BuildContext context, value, Widget? child) {
-      //               return ListView.builder(
-      //                 scrollDirection: Axis.horizontal,
-      //                 itemCount: filters.length,
-      //                 itemBuilder: (BuildContext context, int index) {
-      //                   Filter filter = filters[index];
-      //                   return Padding(
-      //                     padding: const EdgeInsets.symmetric(horizontal: 10),
-      //                     child: Column(
-      //                       mainAxisAlignment: MainAxisAlignment.center,
-      //                       children: [
-      //                         Container(
-      //                           decoration: BoxDecoration(
-      //                             border: Border.all(
-      //                               color: const Color(0xFFD9D9D9),
-      //                               width: 2,
-      //                             ),
-      //                           ),
-      //                           child: SizedBox(
-      //                             width: 50,
-      //                             height: 50,
-      //                             child: FittedBox(
-      //                               fit: BoxFit.fill,
-      //                               child: InkWell(
-      //                                 onTap: () {
-      //                                   setState(() {
-      //                                     currentFilter = filter;
-      //                                   });
-      //                                 },
-      //                                 child: ColorFiltered(
-      //                                   colorFilter:
-      //                                       ColorFilter.matrix(filter.matrix),
-      //                                   child:
-      //                                       Image.memory(value.currentImage!),
-      //                                 ),
-      //                               ),
-      //                             ),
-      //                           ),
-      //                         ),
-      //                         const SizedBox(height: 5),
-      //                         Text(
-      //                           filter.filterName,
-      //                           style: const TextStyle(color: Colors.black),
-      //                         ),
-      //                       ],
-      //                     ),
-      //                   );
-      //                 },
-      //               );
-      //             },
-      //           ),
-      //         ),
-      //         Container(
-      //           padding: const EdgeInsets.only(bottom: 8.0),
-      //           child: const Text(
-      //             'Add Filter',
-      //             style: TextStyle(
-      //               fontSize: 18,
-      //             ),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

@@ -19,6 +19,14 @@ class AppImageProvider extends ChangeNotifier {
     _add(image);
   }
 
+  getImageByIndex(int index){
+    return _images[index];
+  }
+
+  int get index{
+    return _images.length;
+  }
+
   Uint8List? get currentImage{
     return _images[_index];
   }

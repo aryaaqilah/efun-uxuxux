@@ -33,40 +33,42 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () async {
-            Uint8List? bytes = await screenshotController.capture();
-            imageProvider.changeImage(bytes!);
-            if (!mounted) return;
+            // Uint8List? bytes = await screenshotController.capture();
+            // imageProvider.changeImage(bytes!);
+            // if (!mounted) return;
             Navigator.of(context).pushReplacementNamed('/filter');
           },
         ),
         title: Consumer<AppImageProvider>(
           builder: (BuildContext context, value, Widget? child) {
-            return Row(
+            return const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: () {
-                    imageProvider.undo();
-                  },
-                  icon: Icon(Icons.undo,
-                      color: value.canUndo ? Colors.black : Colors.grey),
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Custom Frame',
+                // IconButton(
+                //   onPressed: () {
+                //     imageProvider.undo();
+                //     setState(() {});
+                //   },
+                //   icon: Icon(Icons.undo,
+                //       color: value.canUndo ? Colors.black : Colors.grey),
+                // ),
+                // const SizedBox(width: 8),
+                Text(
+                  'Custom Your Frame',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () {
-                    imageProvider.redo();
-                  },
-                  icon: Icon(Icons.redo,
-                      color: value.canRedo ? Colors.black : Colors.grey),
-                ),
+                // const SizedBox(width: 8),
+                // IconButton(
+                //   onPressed: () {
+                //     imageProvider.redo();
+                //     setState(() {});
+                //   },
+                //   icon: Icon(Icons.redo,
+                //       color: value.canRedo ? Colors.black : Colors.grey),
+                // ),
               ],
             );
           },
