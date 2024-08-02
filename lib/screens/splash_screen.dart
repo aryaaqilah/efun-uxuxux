@@ -24,7 +24,9 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Color(0xFF49919D),
       body: Center(
         child: Image.asset(
-            'assets/logo/logo-white.png'), // Ensure this image exists in your assets
+          'assets/logo/logo-white.png',
+          height: 300,
+        ), // Ensure this image exists in your assets
       ),
     );
   }

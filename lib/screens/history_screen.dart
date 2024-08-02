@@ -16,7 +16,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       {'image': 'assets/images/t2.jpg', 'date': '12 July 2024'},
       {'image': 'assets/images/t3.jpg', 'date': '12 July 2024'},
       {'image': 'assets/images/t4.jpg', 'date': '1 July 2024'},
-      {'image': 'assets/images/t5.jpg', 'date': '12 July 2024'},
+      {'image': 'assets/images/t6.jpg', 'date': '12 July 2024'},
       {'image': 'assets/images/t6.jpg', 'date': '12 July 2024'},
       {'image': 'assets/images/t1.jpg', 'date': '1 July 2024'},
       {'image': 'assets/images/t2.jpg', 'date': '12 July 2024'},
