@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         '/layout': (_) => const ChooseLayout(),
         '/crop': (_) => const CropScreen(),
         '/frame3x1': (_) => const ChooseFrameScreen(),
-        '/sticker': (_) => const StickerScreen(),
+        '/sticker': (_) => const StickerTextScreen(),
         '/save': (_) => const SaveShareScreen(),
         '/text': (_) => const TextScreen(),
         // '/home': (_) => const HomeScreen(),
