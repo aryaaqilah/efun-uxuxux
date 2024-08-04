@@ -7,8 +7,6 @@ import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:photo_editor/screens/filter_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
-// import 'package:path_provider/path_provider.dart';
 
 class SelectedCard3x1Page extends StatefulWidget {
   final int cardIndex;
@@ -22,6 +20,8 @@ class SelectedCard3x1Page extends StatefulWidget {
 class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
   late AppImageProvider imageProvider;
   List<File?> images = [null, null, null];
+  List<List<File?>> undoHistory = [];
+  List<List<File?>> redoHistory = [];
   ScreenshotController screenshotController = ScreenshotController();
 
   @override
@@ -34,34 +34,88 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
     AppImagePicker(source: source).pick(onPick: (File? image) {
       if (image != null) {
         setState(() {
+          // Save current state to undo history
+          undoHistory.add(List.from(images));
+          // Clear redo history
+          redoHistory.clear();
           images[index] = image;
         });
       }
     });
   }
 
-  // Future<void> _captureAndSaveScreenshot(BuildContext context) async {
-  //   final directory = (await getApplicationDocumentsDirectory()).path;
-  //   String fileName = 'polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg';
-  //   String filePath = '$directory/$fileName';
+  void _undo() {
+    if (undoHistory.isNotEmpty) {
+      setState(() {
+        // Save current state to redo history
+        redoHistory.add(List.from(images));
+        // Restore previous state from undo history
+        images = undoHistory.removeLast();
+      });
+    }
+  }
 
-  //   screenshotController.capture().then((Uint8List? image) async {
-  //     if (image != null) {
-  //       final File imageFile = File(filePath);
-  //       await imageFile.writeAsBytes(image);
-  //       // await ImageGallerySaver.saveFile(filePath);
-  //       // print('Screenshot saved to gallery');
-  //       imageProvider.changeImageFile(imageFile);
+  void _redo() {
+    if (redoHistory.isNotEmpty) {
+      setState(() {
+        // Save current state to undo history
+        undoHistory.add(List.from(images));
+        // Restore next state from redo history
+        images = redoHistory.removeLast();
+      });
+    }
+  }
 
-  //       Navigator.of(context).push(MaterialPageRoute(
-  //         builder: (context) => DisplayImagePage(
-  //             imageFile: imageFile, imageProvider: imageProvider),
-  //       ));
-  //     }
-  //   }).catchError((onError) {
-  //     print(onError);
-  //   });
-  // }
+  void _validateAndProceed() async {
+    if (images.contains(null)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in all images')),
+      );
+    } else {
+      Uint8List? bytes = await screenshotController.capture();
+      imageProvider.changeImage(bytes!);
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FilterScreen(layoutIndex: widget.cardIndex),
+        ),
+      );
+    }
+  }
+
+  void _showImageOptions(int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Delete'),
+              onTap: () {
+                setState(() {
+                  // Save current state to undo history
+                  undoHistory.add(List.from(images));
+                  // Clear redo history
+                  redoHistory.clear();
+                  images[index] = null;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.cancel),
+              title: Text('Cancel'),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,53 +129,33 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
             onPressed: () {
               Navigator.of(context).pushReplacementNamed('/layout');
             }),
-        title: Consumer<AppImageProvider>(
-          builder: (BuildContext context, value, Widget? child) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    imageProvider.undo();
-                  },
-                  icon: Icon(Icons.undo,
-                      color: value.canUndo ? Colors.black : Colors.grey),
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  "Add Image",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () {
-                    imageProvider.redo();
-                  },
-                  icon: Icon(Icons.redo,
-                      color: value.canRedo ? Colors.black : Colors.grey),
-                ),
-              ],
-            );
-          },
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: _undo,
+              icon: Icon(Icons.undo,
+                  color: undoHistory.isNotEmpty ? Colors.black : Colors.grey),
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              "Add Image",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: _redo,
+              icon: Icon(Icons.redo,
+                  color: redoHistory.isNotEmpty ? Colors.black : Colors.grey),
+            ),
+          ],
         ),
         actions: [
           IconButton(
-              onPressed: () async {
-                Uint8List? bytes = await screenshotController.capture();
-                imageProvider.changeImage(bytes!);
-                if (!mounted) return;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                       FilterScreen(layoutIndex: widget.cardIndex),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.done))
+              onPressed: _validateAndProceed, icon: const Icon(Icons.done))
         ],
       ),
       body: Container(
@@ -157,41 +191,74 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    images[i] == null
-                                        ? Container(
-                                            color: Colors.cyan,
-                                            width: 283,
-                                            height: 110,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons
-                                                      .add_photo_alternate),
-                                                  color: Colors.red,
-                                                  onPressed: () => _pickImage(
-                                                      i, ImageSource.gallery),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.camera_alt),
-                                                  color: Colors.blue,
-                                                  onPressed: () => _pickImage(
-                                                      i, ImageSource.camera),
-                                                ),
-                                              ],
+                                    GestureDetector(
+                                      onTap: images[i] != null
+                                          ? () => _showImageOptions(i)
+                                          : null,
+                                      child: images[i] == null
+                                          ? Container(
+                                              // color: Colors.cyan,
+                                              width: 283,
+                                              height: 110,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      IconButton(
+                                                        icon: Icon(Icons
+                                                            .add_photo_alternate),
+                                                        onPressed: () =>
+                                                            _pickImage(
+                                                                i,
+                                                                ImageSource
+                                                                    .gallery),
+                                                      ),
+                                                      Text("Gallery",
+                                                          style: TextStyle(
+                                                              fontSize: 12)),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                      width:
+                                                          20), // memberikan jarak antar kolom
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      IconButton(
+                                                        icon: Icon(
+                                                            Icons.camera_alt),
+                                                        onPressed: () =>
+                                                            _pickImage(
+                                                                i,
+                                                                ImageSource
+                                                                    .camera),
+                                                      ),
+                                                      Text("Camera",
+                                                          style: TextStyle(
+                                                              fontSize: 12)),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : Container(
+                                              width: 286,
+                                              color: Colors.black,
+                                              child: Image.file(
+                                                images[i]!,
+                                                width: 100,
+                                                height: 115,
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
-                                          )
-                                        : Container(
-                                            width: 286,
-                                            color: Colors.black,
-                                            child: Image.file(
-                                              images[i]!,
-                                              width: 100,
-                                              height: 115,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                                    ),
                                   ],
                                 );
                               }),
@@ -203,7 +270,7 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
                   ),
                 ),
               ),
-              Text('You selected card ${widget.cardIndex}'),
+              // Text('You selected card ${widget.cardIndex}'),
             ],
           ),
         ),
@@ -211,67 +278,3 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
     );
   }
 }
-
-// class DisplayImagePage extends StatelessWidget {
-//   final File imageFile;
-//   final AppImageProvider imageProvider;
-
-  // DisplayImagePage({required this.imageFile, required this.imageProvider});
-
-  // Future<void> _savePhoto(BuildContext context) async {
-  //   final result = await ImageGallerySaver.saveImage(
-  //     imageFile.readAsBytesSync(),
-  //     quality: 100,
-  //     name: "${DateTime.now().millisecondsSinceEpoch}",
-  //   );
-
-  //   if (!result.containsKey('isSuccess') || !result['isSuccess']) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Something went wrong!'),
-  //       ),
-  //     );
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Image saved to Gallery'),
-  //       ),
-  //     );
-  //   }
-  // }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Generated Polaroid Image'),
-//         actions: [
-//           TextButton(
-//             // onPressed: () => _savePhoto(context),
-//             onPressed: () {
-//               Navigator.of(context).pushReplacementNamed('/filter');
-//             },
-//             child: const Text(
-//               'Save',
-//               style: TextStyle(color: Colors.white),
-//             ),
-//           ),
-//         ],
-//       ),
-//       body: Center(
-//         child: Consumer<AppImageProvider>(
-//           builder: (BuildContext context, value, Widget? child) {
-//             if (value.currentImage != null) {
-//               return Image.memory(
-//                 value.currentImage!,
-//               );
-//             }
-//             return const Center(
-//               child: CircularProgressIndicator(),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }

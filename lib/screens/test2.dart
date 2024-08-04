@@ -76,24 +76,40 @@ class _ChooseLayoutState extends State<ChooseLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF4F4F4),
+        toolbarHeight: 60,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed('/start');
+            }),
+        title: Text(
+          'Choose Layout',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Choose Layout',
-                        style:
-                            TextStyle(color: Color(0xff292929), fontSize: 20),
-                      )
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 30),
+                //   child: Row(
+                //     children: [
+                //       Text(
+                //         'Choose Layout',
+                //         style:
+                //             TextStyle(color: Color(0xff292929), fontSize: 20),
+                //       )
+                //     ],
+                //   ),
+                // ),
                 Container(
                   height: MediaQuery.of(context).size.height / 2 + 170,
                   child: GridView.count(

@@ -1,10 +1,12 @@
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:share/share.dart';
+import 'dart:io';
 
 class SaveShareScreen extends StatefulWidget {
   const SaveShareScreen({Key? key}) : super(key: key);
@@ -65,7 +67,7 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
         color: const Color(0xFFD9D9D9),
         child: Center(
           child: Consumer<AppImageProvider>(
-             builder: (BuildContext context, value, Widget? child) {
+            builder: (BuildContext context, value, Widget? child) {
               return value.currentImage != null
                   ? Image.memory(value.currentImage!)
                   : const CircularProgressIndicator();
@@ -73,120 +75,50 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        width: double.infinity,
-        height: 100,
-        color: const Color(0xFFF4F4F4),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _bottomBarItem(
-                  'assets/images/white_frame.png',
-                  'White',
-                  onPress: () {
-                    setState(() {
-                      _overlayImagePath =
-                          (_overlayImagePath == 'assets/images/white_frame.png')
-                              ? null
-                              : 'assets/images/white_frame.png';
-                    });
-                  },
-                ),
-                _bottomBarItem(
-                  'assets/images/black_frame.png',
-                  'Black',
-                  onPress: () {
-                    setState(() {
-                      _overlayImagePath =
-                          (_overlayImagePath == 'assets/images/black_frame.png')
-                              ? null
-                              : 'assets/images/black_frame.png';
-                    });
-                  },
-                ),
-                _bottomBarItem(
-                  'assets/images/blue_frame.png',
-                  'Blue',
-                  onPress: () {
-                    setState(() {
-                      _overlayImagePath =
-                          (_overlayImagePath == 'assets/images/blue_frame.png')
-                              ? null
-                              : 'assets/images/blue_frame.png';
-                    });
-                  },
-                ),
-                _bottomBarItem(
-                  'assets/images/pink_frame.png',
-                  'Pink',
-                  onPress: () {
-                    setState(() {
-                      _overlayImagePath =
-                          (_overlayImagePath == 'assets/images/pink_frame.png')
-                              ? null
-                              : 'assets/images/pink_frame.png';
-                    });
-                  },
-                ),
-                _bottomBarItem(
-                  'assets/images/mint_frame.png',
-                  'Mint',
-                  onPress: () {
-                    setState(() {
-                      _overlayImagePath =
-                          (_overlayImagePath == 'assets/images/mint_frame.png')
-                              ? null
-                              : 'assets/images/mint_frame.png';
-                    });
-                  },
-                ),
-                _bottomBarItem(
-                  'assets/images/yellow_frame.png',
-                  'Yellow',
-                  onPress: () {
-                    setState(() {
-                      _overlayImagePath =
-                          (_overlayImagePath == 'assets/images/yellow_frame.png')
-                              ? null
-                              : 'assets/images/yellow_frame.png';
-                    });
-                  },
-                ),
-              ],
-            ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.save),
+            label: 'Save',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.share),
+            label: 'Share',
+          ),
+        ],
+        onTap: (index) async {
+          if (index == 0) {
+            // Save functionality
+            await _saveImage();
+          } else if (index == 1) {
+            // Share functionality
+            await _shareImage();
+          }
+        },
       ),
     );
   }
-}
 
-Widget _bottomBarItem(String imagePath, String label,
-    {required VoidCallback onPress}) {
-  return GestureDetector(
-    onTap: onPress,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            imagePath,
-            width: 50,
-            height: 60,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+  Future<void> _saveImage() async {
+    final image = await screenshotController.capture();
+    if (image != null) {
+      final result = await ImageGallerySaver.saveImage(image);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text(result['isSuccess'] ? 'Image Saved!' : 'Save Failed')),
+      );
+    }
+  }
+
+  Future<void> _shareImage() async {
+    final image = await screenshotController.capture();
+    if (image != null) {
+      final directory = (await getApplicationDocumentsDirectory()).path;
+      final imagePath = await File('$directory/screenshot.png').create();
+      await imagePath.writeAsBytes(image);
+
+      Share.shareFiles([imagePath.path], text: 'Check out this image!');
+    }
+  }
 }
