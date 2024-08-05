@@ -93,8 +93,8 @@ class _StickerTextScreenState extends State<StickerTextScreen> {
             actions: [
               IconButton(
                   onPressed: () async {
-                    Uint8List? bytes = await screenshotController.capture();
-                    imageProvider.changeImage(bytes!);
+                    Uint8List? image = await controller.saveAsUint8List();
+                    imageProvider.changeImage(image!);
                     if (!mounted) return;
                     Navigator.of(context).pushReplacementNamed('/save');
                   },
