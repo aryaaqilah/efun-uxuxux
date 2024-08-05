@@ -109,7 +109,8 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
         final Uint8List? image = await screenshotController.capture();
         if (image != null) {
           final directory = (await getApplicationDocumentsDirectory()).path;
-          String fileName = 'polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          String fileName =
+              'polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg';
           String filePath = '$directory/$fileName';
           final File imageFile = File(filePath);
 
@@ -125,7 +126,8 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
             imageProvider.changeImageFile(imageFile);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Failed to save screenshot to gallery')),
+              const SnackBar(
+                  content: Text('Failed to save screenshot to gallery')),
             );
           }
         }
