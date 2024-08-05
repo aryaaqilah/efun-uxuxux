@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_editor/main.dart';
 import 'package:photo_editor/screens/choose_image_1x1_screen.dart';
 import 'package:photo_editor/screens/choose_image_2x2_screen.dart';
 import 'package:photo_editor/screens/choose_image_3x1_screen.dart';
@@ -23,6 +24,7 @@ class _ChooseLayoutState extends State<ChooseLayout> {
   void _onNextPressed() {
     if (_selectedCardIndex != -1) {
       if (_selectedCardIndex == 1) {
+        chosenIndex = 2;
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -31,6 +33,7 @@ class _ChooseLayoutState extends State<ChooseLayout> {
           ),
         );
       } else if (_selectedCardIndex == 0) {
+        chosenIndex = 1;
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -39,6 +42,7 @@ class _ChooseLayoutState extends State<ChooseLayout> {
           ),
         );
       } else if (_selectedCardIndex == 2) {
+        chosenIndex = 3;
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -47,6 +51,7 @@ class _ChooseLayoutState extends State<ChooseLayout> {
           ),
         );
       } else if (_selectedCardIndex == 3) {
+        chosenIndex = 4;
         Navigator.push(
           context,
           MaterialPageRoute(

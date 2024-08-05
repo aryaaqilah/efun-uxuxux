@@ -29,6 +29,8 @@ void main() {
   const MyApp();
 }
 
+int? chosenIndex;
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -49,11 +51,12 @@ class MyApp extends StatelessWidget {
         '/start': (_) => const StartScreen(),
         '/history': (_) => const HistoryScreen(),
         '/layout': (_) => const ChooseLayout(),
-        '/crop': (_) => const CropScreen(),
+        '/filter': (_) => const FilterScreen(),
         '/frame3x1': (_) => const ChooseFrameScreen(),
         '/sticker': (_) => const StickerTextScreen(),
         '/save': (_) => const SaveShareScreen(),
         '/text': (_) => const TextScreen(),
+        // '/crop': (_) => const CropScreen(),
         // '/home': (_) => const HomeScreen(),
         // '/adjust': (_) => const AdjustScreen(),
         // '/fit': (_) => const FitScreen(),

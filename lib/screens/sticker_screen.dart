@@ -4,6 +4,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:lindi_sticker_widget/lindi_controller.dart';
 import 'package:lindi_sticker_widget/lindi_sticker_widget.dart';
 import 'package:photo_editor/helper/stickers.dart';
+import 'package:photo_editor/main.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -66,10 +67,11 @@ class _StickerTextScreenState extends State<StickerTextScreen> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () async {
-                Uint8List? bytes = await screenshotController.capture();
-                imageProvider.changeImage(bytes!);
-                if (!mounted) return;
-                Navigator.of(context).pushReplacementNamed('/filter');
+                if (chosenIndex == 1) {
+                  Navigator.of(context).pushReplacementNamed('/frame1x1');
+                } else if (chosenIndex == 2) {
+                  Navigator.of(context).pushReplacementNamed('/frame3x1');
+                }
               },
             ),
             title: Consumer<AppImageProvider>(
@@ -134,7 +136,7 @@ class _StickerTextScreenState extends State<StickerTextScreen> {
           ),
           bottomNavigationBar: Container(
             width: double.infinity,
-            height: 120,
+            height: 100,
             color: const Color(0xFFF4F4F4),
             child: SafeArea(
               child: Column(
@@ -182,7 +184,7 @@ class _StickerTextScreenState extends State<StickerTextScreen> {
                                   });
                                 },
                                 child: const Text(
-                                  "Add Text",
+                                  "Type Here",
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 20),
                                 ),
@@ -261,7 +263,7 @@ class _StickerTextScreenState extends State<StickerTextScreen> {
     return InkWell(
       onTap: onPress,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 2.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

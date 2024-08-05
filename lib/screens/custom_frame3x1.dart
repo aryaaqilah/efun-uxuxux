@@ -36,7 +36,7 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
             // Uint8List? bytes = await screenshotController.capture();
             // imageProvider.changeImage(bytes!);
             // if (!mounted) return;
-            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed('/filter');
           },
         ),
         title: Consumer<AppImageProvider>(
@@ -195,10 +195,10 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
                   'Yellow',
                   onPress: () {
                     setState(() {
-                      _overlayImagePath =
-                          (_overlayImagePath == 'assets/images/yellow_frame.png')
-                              ? null
-                              : 'assets/images/yellow_frame.png';
+                      _overlayImagePath = (_overlayImagePath ==
+                              'assets/images/yellow_frame.png')
+                          ? null
+                          : 'assets/images/yellow_frame.png';
                     });
                   },
                 ),

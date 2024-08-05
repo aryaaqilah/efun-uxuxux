@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:photo_editor/helper/filters.dart';
+import 'package:photo_editor/main.dart';
 import 'package:photo_editor/model/filter.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
 import 'package:photo_editor/screens/choose_image_1x1_screen.dart';
@@ -10,9 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 class FilterScreen extends StatefulWidget {
-  final int layoutIndex;
-
-  const FilterScreen({Key? key, required this.layoutIndex}) : super(key: key);
+  const FilterScreen({Key? key}) : super(key: key);
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -55,23 +54,7 @@ class _FilterScreenState extends State<FilterScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if (widget.layoutIndex == 0) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      SelectedCard1x1Page(cardIndex: widget.layoutIndex),
-                ),
-              );
-            }else if (widget.layoutIndex == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      SelectedCard3x1Page(cardIndex: widget.layoutIndex),
-                ),
-              );
-            }
+            Navigator.of(context).pop();
           },
         ),
         title: Consumer<AppImageProvider>(
@@ -112,9 +95,9 @@ class _FilterScreenState extends State<FilterScreen> {
                 Uint8List? bytes = await screenshotController.capture();
                 imageProvider.changeImage(bytes!);
                 if (!mounted) return;
-                if (widget.layoutIndex == 0) {
+                if (chosenIndex == 1) {
                   Navigator.of(context).pushReplacementNamed('/frame1x1');
-                } else if (widget.layoutIndex == 1) {
+                } else if (chosenIndex == 2) {
                   Navigator.of(context).pushReplacementNamed('/frame3x1');
                 }
               },

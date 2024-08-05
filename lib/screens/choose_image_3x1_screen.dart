@@ -78,7 +78,7 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FilterScreen(layoutIndex: widget.cardIndex),
+          builder: (context) => FilterScreen(),
         ),
       );
     }
