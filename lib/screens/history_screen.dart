@@ -32,6 +32,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Navigator.of(context).pushReplacementNamed('/start');
           },
         ),
+        title: const Text(
+          'History',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
         elevation: 0,
       ),
       body: Column(
@@ -68,25 +75,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   );
                 },
               ),
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            color: Colors.white,
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  child: Text(
-                    'History',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ],
