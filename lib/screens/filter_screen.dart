@@ -5,8 +5,7 @@ import 'package:photo_editor/helper/filters.dart';
 import 'package:photo_editor/main.dart';
 import 'package:photo_editor/model/filter.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
-import 'package:photo_editor/screens/choose_image_1x1_screen.dart';
-import 'package:photo_editor/screens/choose_image_3x1_screen.dart';
+import 'package:photo_editor/screens/custom_frame3x1.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -23,6 +22,7 @@ class _FilterScreenState extends State<FilterScreen> {
 
   late AppImageProvider imageProvider;
   late int indexOri;
+  // late String? frame;
   // late Uint8List originalImage;
   ScreenshotController screenshotController = ScreenshotController();
 
@@ -32,6 +32,7 @@ class _FilterScreenState extends State<FilterScreen> {
     currentFilter = filters[0];
     imageProvider = Provider.of<AppImageProvider>(context, listen: false);
     indexOri = imageProvider.index - 1;
+    // frame = widget.frame;
     // originalImage = imageProvider.getImageByIndex(indexOri);
     super.initState();
   }
@@ -54,6 +55,7 @@ class _FilterScreenState extends State<FilterScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
+            framePath = null;
             Navigator.of(context).pop();
           },
         ),
@@ -96,9 +98,19 @@ class _FilterScreenState extends State<FilterScreen> {
                 imageProvider.changeImage(bytes!);
                 if (!mounted) return;
                 if (chosenIndex == 1) {
-                  Navigator.of(context).pushReplacementNamed('/frame1x1');
+                  Navigator.of(context).pushNamed('/frame1x1');
                 } else if (chosenIndex == 2) {
-                  Navigator.of(context).pushReplacementNamed('/frame3x1');
+                  Navigator.of(context).pushNamed('/frame3x1');
+                  // final result = await Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const ChooseFrameScreen(),
+                  //   ),
+                  // ) as String?;
+
+                  // setState(() {
+                  //   frame = result;
+                  // });
                 }
               },
               icon: const Icon(Icons.done))
@@ -112,9 +124,38 @@ class _FilterScreenState extends State<FilterScreen> {
               if (value.currentImage != null) {
                 return Screenshot(
                   controller: screenshotController,
-                  child: ColorFiltered(
-                      colorFilter: ColorFilter.matrix(currentFilter.matrix),
-                      child: Image.memory(value.getImageByIndex(indexOri)!)),
+                  // child: ColorFiltered(
+                  //     colorFilter: ColorFilter.matrix(currentFilter.matrix),
+                  //     child: Image.memory(value.getImageByIndex(indexOri)!)),
+                  child: Stack(
+                    children: [
+                      // Apply the filter to the image
+                      ColorFiltered(
+                        colorFilter: ColorFilter.matrix(currentFilter.matrix),
+                        child: Image.memory(value.getImageByIndex(indexOri)!),
+                      ),
+                      // if (framePath != null && framePath!.isNotEmpty)
+                      //   Positioned.fill(
+                      //     child: Align(
+                      //       alignment: Alignment.center,
+                      //       child: Image.asset(
+                      //         framePath!,
+                      //         fit: BoxFit.contain,
+                      //       ),
+                      //     ),
+                      //   )
+                      // else if (framePath == null && frame != null && frame!.isNotEmpty)
+                      //   Positioned.fill(
+                      //     child: Align(
+                      //       alignment: Alignment.center,
+                      //       child: Image.asset(
+                      //         frame!,
+                      //         fit: BoxFit.contain,
+                      //       ),
+                      //     ),
+                      //   ),
+                    ],
+                  ),
                 );
               }
               return const Center(
@@ -167,7 +208,8 @@ class _FilterScreenState extends State<FilterScreen> {
                             },
                             child: ColorFiltered(
                               colorFilter: ColorFilter.matrix(filter.matrix),
-                              child: Image.memory(value.currentImage!),
+                              child: Image.memory(
+                                  value.getImageByIndex(indexOri)!),
                             ),
                           ),
                         ),

@@ -30,6 +30,7 @@ void main() {
 }
 
 int? chosenIndex;
+String? framePath;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

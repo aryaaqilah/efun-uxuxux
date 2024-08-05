@@ -21,7 +21,6 @@ class StickerTextScreen extends StatefulWidget {
 }
 
 class _StickerTextScreenState extends State<StickerTextScreen> {
-  String? _overlayImagePath;
   late AppImageProvider imageProvider;
   ScreenshotController screenshotController = ScreenshotController();
   LindiController controller = LindiController();
@@ -33,27 +32,6 @@ class _StickerTextScreenState extends State<StickerTextScreen> {
   void initState() {
     imageProvider = Provider.of<AppImageProvider>(context, listen: false);
     super.initState();
-  }
-
-  Future<void> _captureAndSaveScreenshot(BuildContext context) async {
-    final directory = (await getApplicationDocumentsDirectory()).path;
-    String fileName = 'sticker_${DateTime.now().millisecondsSinceEpoch}.jpg';
-    String filePath = '$directory/$fileName';
-
-    screenshotController.capture().then((Uint8List? image) async {
-      if (image != null) {
-        final File imageFile = File(filePath);
-        await imageFile.writeAsBytes(image);
-        imageProvider.changeImageFile(imageFile);
-
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => DisplayImagePage(
-              imageFile: imageFile, imageProvider: imageProvider),
-        ));
-      }
-    }).catchError((onError) {
-      print(onError);
-    });
   }
 
   @override
@@ -113,17 +91,6 @@ class _StickerTextScreenState extends State<StickerTextScreen> {
                           controller: controller,
                           child: Image.memory(value.currentImage!),
                         ),
-                        if (_overlayImagePath != null &&
-                            _overlayImagePath!.isNotEmpty)
-                          Positioned.fill(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Image.asset(
-                                _overlayImagePath!,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
                       ],
                     ),
                   );

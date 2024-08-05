@@ -75,12 +75,13 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
       Uint8List? bytes = await screenshotController.capture();
       imageProvider.changeImage(bytes!);
       if (!mounted) return;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FilterScreen(),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => FilterScreen(),
+      //   ),
+      // );
+      Navigator.of(context).pushNamed('/filter');
     }
   }
 
