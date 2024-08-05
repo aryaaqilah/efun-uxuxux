@@ -179,90 +179,96 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
                     ),
                     Screenshot(
                       controller: screenshotController,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 40.0),
-                        child: Center(
-                          child: Container(
-                            width: 300,
-                            // color: Colors.brown,
-                            height: 390,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: List.generate(3, (i) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: images[i] != null
-                                          ? () => _showImageOptions(i)
-                                          : null,
-                                      child: images[i] == null
-                                          ? Container(
-                                              // color: Colors.cyan,
-                                              width: 283,
-                                              height: 110,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(Icons
-                                                            .add_photo_alternate),
-                                                        onPressed: () =>
-                                                            _pickImage(
-                                                                i,
-                                                                ImageSource
-                                                                    .gallery),
-                                                      ),
-                                                      Text("Gallery",
-                                                          style: TextStyle(
-                                                              fontSize: 12)),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                      width:
-                                                          20), // memberikan jarak antar kolom
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      IconButton(
-                                                        icon: Icon(
-                                                            Icons.camera_alt),
-                                                        onPressed: () =>
-                                                            _pickImage(
-                                                                i,
-                                                                ImageSource
-                                                                    .camera),
-                                                      ),
-                                                      Text("Camera",
-                                                          style: TextStyle(
-                                                              fontSize: 12)),
-                                                    ],
-                                                  ),
-                                                ],
+                      child: Container(
+                        width: 357,
+                        height: 500,
+                        // color: const Color.fromARGB(78, 0, 187, 212),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 30.0),
+                          child: Center(
+                            child: Container(
+                              width: 300,
+                              // color: Colors.brown,
+                              height: 390,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: List.generate(3, (i) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: images[i] != null
+                                            ? () => _showImageOptions(i)
+                                            : null,
+                                        child: images[i] == null
+                                            ? Container(
+                                                // color: Colors.cyan,
+                                                width: 283,
+                                                height: 110,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        IconButton(
+                                                          icon: Icon(Icons
+                                                              .add_photo_alternate),
+                                                          onPressed: () =>
+                                                              _pickImage(
+                                                                  i,
+                                                                  ImageSource
+                                                                      .gallery),
+                                                        ),
+                                                        Text("Gallery",
+                                                            style: TextStyle(
+                                                                fontSize: 12)),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        width:
+                                                            20), // memberikan jarak antar kolom
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        IconButton(
+                                                          icon: Icon(
+                                                              Icons.camera_alt),
+                                                          onPressed: () =>
+                                                              _pickImage(
+                                                                  i,
+                                                                  ImageSource
+                                                                      .camera),
+                                                        ),
+                                                        Text("Camera",
+                                                            style: TextStyle(
+                                                                fontSize: 12)),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Container(
+                                                width: 288,
+                                                color: Colors.black,
+                                                child: Image.file(
+                                                  images[i]!,
+                                                  width: 100,
+                                                  height: 115,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
-                                            )
-                                          : Container(
-                                              width: 286,
-                                              color: Colors.black,
-                                              child: Image.file(
-                                                images[i]!,
-                                                width: 100,
-                                                height: 115,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                    ),
-                                  ],
-                                );
-                              }),
+                                      ),
+                                    ],
+                                  );
+                                }),
+                              ),
                             ),
                           ),
                         ),
