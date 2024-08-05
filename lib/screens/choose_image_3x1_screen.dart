@@ -75,12 +75,13 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
       Uint8List? bytes = await screenshotController.capture();
       imageProvider.changeImage(bytes!);
       if (!mounted) return;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FilterScreen(),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => FilterScreen(),
+      //   ),
+      // );
+      Navigator.of(context).pushNamed('/filter');
     }
   }
 
@@ -164,21 +165,21 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Screenshot(
-                controller: screenshotController,
-                child: Container(
-                  width: 357,
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 357,
-                          height: 500,
-                          // color: Colors.cyan,
-                          child: Image.asset('assets/layout/$index.png'),
-                        ),
+              Container(
+                width: 357,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 357,
+                        height: 500,
+                        // color: Colors.cyan,
+                        child: Image.asset('assets/layout/$index.png'),
                       ),
-                      Padding(
+                    ),
+                    Screenshot(
+                      controller: screenshotController,
+                      child: Padding(
                         padding: const EdgeInsets.only(top: 40.0),
                         child: Center(
                           child: Container(
@@ -266,8 +267,8 @@ class _SelectedCard3x1PageState extends State<SelectedCard3x1Page> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               // Text('You selected card ${widget.cardIndex}'),

@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:photo_editor/main.dart';
 import 'package:photo_editor/providers/app_image_provider.dart';
+import 'package:photo_editor/screens/filter_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -33,10 +35,12 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () async {
+            // framePath = null;
+            // Navigator.pop(context, _overlayImagePath);
             // Uint8List? bytes = await screenshotController.capture();
             // imageProvider.changeImage(bytes!);
             // if (!mounted) return;
-            Navigator.of(context).pushReplacementNamed('/filter');
+            Navigator.pop(context);
           },
         ),
         title: Consumer<AppImageProvider>(
@@ -79,6 +83,7 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
                 Uint8List? bytes = await screenshotController.capture();
                 imageProvider.changeImage(bytes!);
                 if (!mounted) return;
+                // framePath = _overlayImagePath;
                 Navigator.of(context).pushReplacementNamed('/sticker');
               },
               icon: const Icon(Icons.done))
