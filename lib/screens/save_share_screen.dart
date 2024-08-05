@@ -67,12 +67,15 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
       body: Container(
         color: const Color(0xFFD9D9D9),
         child: Center(
-          child: Consumer<AppImageProvider>(
-            builder: (BuildContext context, value, Widget? child) {
-              return value.currentImage != null
-                  ? Image.memory(value.currentImage!)
-                  : const CircularProgressIndicator();
-            },
+          child: Screenshot(
+            controller: screenshotController,
+            child: Consumer<AppImageProvider>(
+              builder: (BuildContext context, value, Widget? child) {
+                return value.currentImage != null
+                    ? Image.memory(value.currentImage!)
+                    : const CircularProgressIndicator();
+              },
+            ),
           ),
         ),
       ),
@@ -103,26 +106,29 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
   Future<void> _saveImage(BuildContext context) async {
     // Request storage permissions
     var status = await Permission.storage.request();
+    print(status);
     if (status.isGranted) {
       try {
         // Capture the screenshot
         final Uint8List? image = await screenshotController.capture();
         if (image != null) {
-          final directory = (await getApplicationDocumentsDirectory()).path;
-          String fileName =
-              'polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg';
-          String filePath = '$directory/$fileName';
-          final File imageFile = File(filePath);
-
-          // Save the image to the file
-          await imageFile.writeAsBytes(image);
-
           // Save the image to the gallery
-          final result = await ImageGallerySaver.saveFile(filePath);
+          final result = await ImageGallerySaver.saveImage(
+            image,
+            quality: 60,
+            name: 'polaroid_${DateTime.now().millisecondsSinceEpoch}',
+          );
           if (result['isSuccess']) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Screenshot saved to gallery')),
             );
+            // Optionally, update the image provider if necessary
+            final directory = (await getApplicationDocumentsDirectory()).path;
+            String fileName =
+                'polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg';
+            String filePath = '$directory/$fileName';
+            final File imageFile = File(filePath);
+            await imageFile.writeAsBytes(image);
             imageProvider.changeImageFile(imageFile);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -135,9 +141,41 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
         print('Error saving screenshot: $e');
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Storage permission denied')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Storage permission denied')),
+      // );
+      try {
+        // Capture the screenshot
+        final Uint8List? image = await screenshotController.capture();
+        if (image != null) {
+          // Save the image to the gallery
+          final result = await ImageGallerySaver.saveImage(
+            image,
+            quality: 60,
+            name: 'polaroid_${DateTime.now().millisecondsSinceEpoch}',
+          );
+          if (result['isSuccess']) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Image saved to gallery')),
+            );
+            // Optionally, update the image provider if necessary
+            final directory = (await getApplicationDocumentsDirectory()).path;
+            String fileName =
+                'polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg';
+            String filePath = '$directory/$fileName';
+            final File imageFile = File(filePath);
+            await imageFile.writeAsBytes(image);
+            imageProvider.changeImageFile(imageFile);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Failed to save screenshot to gallery')),
+            );
+          }
+        }
+      } catch (e) {
+        print('Error saving screenshot: $e');
+      }
     }
   }
 
