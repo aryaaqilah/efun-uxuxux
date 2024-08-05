@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share/share.dart';
 import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 
 class SaveShareScreen extends StatefulWidget {
   const SaveShareScreen({Key? key}) : super(key: key);
@@ -89,7 +90,7 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
         onTap: (index) async {
           if (index == 0) {
             // Save functionality
-            await _saveImage();
+            await _saveImage(context);
           } else if (index == 1) {
             // Share functionality
             await _shareImage();
@@ -99,14 +100,41 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
     );
   }
 
-  Future<void> _saveImage() async {
-    final image = await screenshotController.capture();
-    if (image != null) {
-      final result = await ImageGallerySaver.saveImage(image);
+  Future<void> _saveImage(BuildContext context) async {
+    // Request storage permissions
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      try {
+        // Capture the screenshot
+        final Uint8List? image = await screenshotController.capture();
+        if (image != null) {
+          final directory = (await getApplicationDocumentsDirectory()).path;
+          String fileName = 'polaroid_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          String filePath = '$directory/$fileName';
+          final File imageFile = File(filePath);
+
+          // Save the image to the file
+          await imageFile.writeAsBytes(image);
+
+          // Save the image to the gallery
+          final result = await ImageGallerySaver.saveFile(filePath);
+          if (result['isSuccess']) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Screenshot saved to gallery')),
+            );
+            imageProvider.changeImageFile(imageFile);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to save screenshot to gallery')),
+            );
+          }
+        }
+      } catch (e) {
+        print('Error saving screenshot: $e');
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text(result['isSuccess'] ? 'Image Saved!' : 'Save Failed')),
+        const SnackBar(content: Text('Storage permission denied')),
       );
     }
   }
