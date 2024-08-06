@@ -41,6 +41,9 @@ class _StickerTextScreenState extends State<StickerTextScreen> {
         Scaffold(
           appBar: AppBar(
             backgroundColor: const Color(0xFFF4F4F4),
+            iconTheme: const IconThemeData(
+              color: Colors.black,
+            ),
             toolbarHeight: 60,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),

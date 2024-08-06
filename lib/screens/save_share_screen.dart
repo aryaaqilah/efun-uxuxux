@@ -17,7 +17,6 @@ class SaveShareScreen extends StatefulWidget {
 }
 
 class _SaveShareScreenState extends State<SaveShareScreen> {
-  String? _overlayImagePath;
 
   late AppImageProvider imageProvider;
   ScreenshotController screenshotController = ScreenshotController();
@@ -33,6 +32,9 @@ class _SaveShareScreenState extends State<SaveShareScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF4F4F4),
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
         toolbarHeight: 60,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

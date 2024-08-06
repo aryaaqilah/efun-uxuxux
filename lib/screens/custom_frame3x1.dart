@@ -23,6 +23,7 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
   @override
   void initState() {
     imageProvider = Provider.of<AppImageProvider>(context, listen: false);
+    _overlayImagePath = 'assets/images/white_frame.png';
     super.initState();
   }
 
@@ -31,6 +32,9 @@ class _ChooseFrameScreenState extends State<ChooseFrameScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF4F4F4),
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
         toolbarHeight: 60,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

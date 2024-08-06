@@ -83,13 +83,16 @@ class _ChooseLayoutState extends State<ChooseLayout> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF4F4F4),
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
         toolbarHeight: 60,
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pushReplacementNamed('/start');
             }),
-        title: Text(
+        title: const Text(
           'Choose Layout',
           style: TextStyle(
             fontSize: 20,
